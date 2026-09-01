@@ -40,14 +40,14 @@ import { AuthService } from '../../services/auth.service';
         <button
           type="button"
           class="flex-1 text-[11px] font-medium py-1.5 px-2.5 rounded-lg border border-border/80 bg-accent/30 hover:bg-accent hover:text-foreground text-muted-foreground transition-colors"
-          (click)="fillDemo('admin@example.com', 'password123')"
+          (click)="fillDemo('admin@example.com', 'Password123!')"
         >
           Fill Admin Demo
         </button>
         <button
           type="button"
           class="flex-1 text-[11px] font-medium py-1.5 px-2.5 rounded-lg border border-border/80 bg-accent/30 hover:bg-accent hover:text-foreground text-muted-foreground transition-colors"
-          (click)="fillDemo('user@example.com', 'password123')"
+          (click)="fillDemo('user@example.com', 'Password123!')"
         >
           Fill Member Demo
         </button>

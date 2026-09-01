@@ -24,9 +24,10 @@ export class AuthService {
     if (this.tokenService.getAccessToken()) {
       try {
         this.isLoading.set(true);
-        const userProfile = await firstValueFrom(
-          this.http.get<User>(ENDPOINTS.auth.me)
+        const res = await firstValueFrom(
+          this.http.get<any>(ENDPOINTS.auth.me)
         );
+        const userProfile = res?.data || res;
         this.user.set(userProfile);
       } catch {
         this.logout();
@@ -39,9 +40,10 @@ export class AuthService {
   async login(credentials: { email: string; password: string }): Promise<LoginResponse> {
     this.isLoading.set(true);
     try {
-      const response = await firstValueFrom(
-        this.http.post<LoginResponse>(ENDPOINTS.auth.login, credentials)
+      const res = await firstValueFrom(
+        this.http.post<any>(ENDPOINTS.auth.login, credentials)
       );
+      const response: LoginResponse = res?.data || res;
 
       this.tokenService.setTokens(response.accessToken, response.refreshToken);
       this.user.set(response.user);
@@ -54,9 +56,13 @@ export class AuthService {
   async register(credentials: { name: string; email: string; password: string }): Promise<LoginResponse> {
     this.isLoading.set(true);
     try {
-      const response = await firstValueFrom(
-        this.http.post<LoginResponse>(ENDPOINTS.auth.register, credentials)
+      const res = await firstValueFrom(
+        this.http.post<any>(ENDPOINTS.auth.register, {
+          ...credentials,
+          username: credentials.email.split('@')[0] || credentials.name.toLowerCase().replace(/\s+/g, '')
+        })
       );
+      const response: LoginResponse = res?.data || res;
 
       this.tokenService.setTokens(response.accessToken, response.refreshToken);
       this.user.set(response.user);

@@ -12,26 +12,26 @@ export class TokenService {
 
   constructor() {
     if (typeof window !== 'undefined') {
-      const token = localStorage.getItem(ACCESS_TOKEN_KEY);
+      const token = sessionStorage.getItem(ACCESS_TOKEN_KEY);
       this._hasToken.set(!!token);
     }
   }
 
   getAccessToken(): string | null {
     if (typeof window === 'undefined') return null;
-    return localStorage.getItem(ACCESS_TOKEN_KEY);
+    return sessionStorage.getItem(ACCESS_TOKEN_KEY);
   }
 
   getRefreshToken(): string | null {
     if (typeof window === 'undefined') return null;
-    return localStorage.getItem(REFRESH_TOKEN_KEY);
+    return sessionStorage.getItem(REFRESH_TOKEN_KEY);
   }
 
   setTokens(accessToken: string, refreshToken?: string): void {
     if (typeof window !== 'undefined') {
-      localStorage.setItem(ACCESS_TOKEN_KEY, accessToken);
+      sessionStorage.setItem(ACCESS_TOKEN_KEY, accessToken);
       if (refreshToken) {
-        localStorage.setItem(REFRESH_TOKEN_KEY, refreshToken);
+        sessionStorage.setItem(REFRESH_TOKEN_KEY, refreshToken);
       }
       this._hasToken.set(true);
     }
@@ -39,8 +39,8 @@ export class TokenService {
 
   clearTokens(): void {
     if (typeof window !== 'undefined') {
-      localStorage.removeItem(ACCESS_TOKEN_KEY);
-      localStorage.removeItem(REFRESH_TOKEN_KEY);
+      sessionStorage.removeItem(ACCESS_TOKEN_KEY);
+      sessionStorage.removeItem(REFRESH_TOKEN_KEY);
       this._hasToken.set(false);
     }
   }

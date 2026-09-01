@@ -55,7 +55,7 @@ export class InputComponent implements ControlValueAccessor {
 
   readonly inputClasses = computed(() =>
     cn(
-      'flex h-10 w-full rounded-lg border border-input bg-background/50 px-3.5 py-2 text-sm text-foreground ring-offset-background placeholder:text-muted-foreground/60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1 disabled:cursor-not-allowed disabled:opacity-50 transition-all duration-150',
+      'flex h-10 w-full min-w-0 max-w-full box-border rounded-lg border border-input bg-background/50 px-3.5 py-2 text-sm text-foreground ring-offset-background placeholder:text-muted-foreground/60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1 disabled:cursor-not-allowed disabled:opacity-50 transition-all duration-150',
       this.error() ? 'border-destructive focus-visible:ring-destructive' : '',
       this.className()
     )

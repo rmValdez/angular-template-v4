@@ -4,8 +4,18 @@ import { authGuard, guestGuard } from './core/guards/auth.guard';
 export const routes: Routes = [
   {
     path: '',
-    redirectTo: 'dashboard',
-    pathMatch: 'full'
+    pathMatch: 'full',
+    loadComponent: () =>
+      import('./features/landing/views/landing/landing-view.component').then(
+        m => m.LandingPageViewComponent
+      )
+  },
+  {
+    path: 'landing',
+    loadComponent: () =>
+      import('./features/landing/views/landing/landing-view.component').then(
+        m => m.LandingPageViewComponent
+      )
   },
   {
     path: 'login',
@@ -45,6 +55,14 @@ export const routes: Routes = [
     loadComponent: () =>
       import('./features/posts/views/posts/posts-view.component').then(
         m => m.PostsViewComponent
+      )
+  },
+  {
+    path: 'sandbox',
+    canActivate: [authGuard],
+    loadComponent: () =>
+      import('./features/sandbox/views/sandbox/sandbox-view.component').then(
+        m => m.SandboxViewComponent
       )
   },
   {
