@@ -50,6 +50,10 @@ export const routes: Routes = [
       )
   },
   {
+    path: 'user',
+    redirectTo: 'users'
+  },
+  {
     path: 'sandbox',
     canActivate: [authGuard],
     loadComponent: () =>
