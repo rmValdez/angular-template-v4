@@ -56,7 +56,7 @@ import { ThemeToggleComponent } from '../../../../shared/ui/theme-toggle/theme-t
 
         <div class="text-center text-[11px] text-muted-foreground/80 space-y-1">
           <p>Demo accounts: <span class="font-mono font-bold text-foreground">admin&#64;example.com</span> | <span class="font-mono font-bold text-foreground">user&#64;example.com</span></p>
-          <p>Password: <span class="font-mono">password123</span></p>
+          <p>Password: <span class="font-mono font-semibold">Password123!</span></p>
         </div>
       </div>
     </div>
