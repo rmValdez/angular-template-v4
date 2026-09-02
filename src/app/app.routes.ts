@@ -45,16 +45,8 @@ export const routes: Routes = [
     path: 'users',
     canActivate: [authGuard],
     loadComponent: () =>
-      import('./features/users/views/users/users-view.component').then(
+      import('./features/user/views/users/users-view.component').then(
         m => m.UsersViewComponent
-      )
-  },
-  {
-    path: 'posts',
-    canActivate: [authGuard],
-    loadComponent: () =>
-      import('./features/posts/views/posts/posts-view.component').then(
-        m => m.PostsViewComponent
       )
   },
   {

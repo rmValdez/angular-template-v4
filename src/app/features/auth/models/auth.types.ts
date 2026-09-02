@@ -17,7 +17,8 @@ export const UserSchema = z.object({
   name: z.string(),
   email: z.string().email(),
   role: UserRoleSchema,
-  avatar: z.string().optional()
+  avatar: z.string().optional(),
+  permissions: z.array(z.string()).default([])
 });
 
 export type User = z.infer<typeof UserSchema>;

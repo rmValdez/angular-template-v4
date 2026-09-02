@@ -6,6 +6,15 @@ import { injectSafeQuery, injectSafeMutation } from '../../../shared/query';
 import { ENDPOINTS } from '../../../shared/api/endpoints';
 import { UserItem, UserListSchema, UserItemSchema } from '../models/user.types';
 
+interface UsersResponseEnvelope {
+  data?: {
+    items?: unknown[];
+    users?: unknown[];
+  };
+  items?: unknown[];
+  users?: unknown[];
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -19,7 +28,10 @@ export class UsersService {
   getUsersQuery() {
     return injectSafeQuery(() => ({
       queryKey: ['users', 'list'],
-      queryFn: () => firstValueFrom(this.http.get<UserItem[]>(ENDPOINTS.users.list)),
+      queryFn: async () => {
+        const res = await firstValueFrom(this.http.get<UsersResponseEnvelope>(ENDPOINTS.users.list));
+        return (res?.data?.items ?? res?.data?.users ?? res?.items ?? res?.users ?? res?.data ?? res ?? []) as UserItem[];
+      },
       schema: UserListSchema
     }));
   }
