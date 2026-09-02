@@ -374,7 +374,7 @@ export class QuizTabComponent {
   });
 
   readonly displayQuestions = computed(() => {
-    let list = this.allQuestions();
+    const list = this.allQuestions();
     if (this.quizMode() === 'SPRINT_20') {
       return list.slice(0, 20);
     }

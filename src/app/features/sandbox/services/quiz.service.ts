@@ -1,7 +1,7 @@
 import { Injectable, inject, Signal } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { injectQuery, injectMutation, QueryClient } from '@tanstack/angular-query-experimental';
 import { firstValueFrom } from 'rxjs';
+import { injectSafeQuery } from '../../../shared/query';
 import { QuizQuestion } from '../data/quiz-questions.data';
 
 export interface QuizApiResponse {
@@ -33,14 +33,14 @@ export class QuizService {
   private readonly apiUrl = 'http://localhost:3002/api/v1/quiz';
 
   /**
-   * Fetch quiz questions dynamically from PostgreSQL backend
+   * Fetch quiz questions dynamically from PostgreSQL backend with SafeQuery
    */
   getQuizQuestionsQuery(
     categorySignal: Signal<string>,
     difficultySignal: Signal<string>,
     searchSignal: Signal<string>
   ) {
-    return injectQuery(() => {
+    return injectSafeQuery<{ items: QuizQuestion[]; total: number }>(() => {
       const category = categorySignal();
       const difficulty = difficultySignal();
       const search = searchSignal();
@@ -70,10 +70,10 @@ export class QuizService {
   }
 
   /**
-   * Fetch user quiz progress from PostgreSQL database
+   * Fetch user quiz progress from PostgreSQL database with SafeQuery
    */
   getQuizProgressQuery() {
-    return injectQuery(() => ({
+    return injectSafeQuery<QuizProgressResponse['data']>(() => ({
       queryKey: ['quiz-progress'],
       queryFn: async () => {
         const res = await firstValueFrom(

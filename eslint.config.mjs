@@ -8,6 +8,7 @@ export default [
       '.angular',
       'node_modules',
       'coverage',
+      'tools',
       '*.config.mjs'
     ]
   },

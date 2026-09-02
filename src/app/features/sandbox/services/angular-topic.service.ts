@@ -1,7 +1,8 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { injectQuery, injectMutation, QueryClient } from '@tanstack/angular-query-experimental';
+import { QueryClient } from '@tanstack/angular-query-experimental';
 import { firstValueFrom } from 'rxjs';
+import { injectSafeQuery, injectSafeMutation } from '../../../shared/query';
 import { ENDPOINTS } from '../../../shared/api/endpoints';
 
 export interface AngularTopicItem {
@@ -38,10 +39,10 @@ export class AngularTopicService {
   private readonly queryClient = inject(QueryClient);
 
   /**
-   * TanStack Query for fetching topics
+   * Zod-validated Query for fetching topics
    */
   getTopicsQuery() {
-    return injectQuery(() => ({
+    return injectSafeQuery<PaginatedData<AngularTopicItem>>(() => ({
       queryKey: ['angular', 'topics'],
       queryFn: async () => {
         const res = await firstValueFrom(
@@ -53,10 +54,10 @@ export class AngularTopicService {
   }
 
   /**
-   * TanStack Mutation for liking a topic
+   * Zod-validated Mutation for liking a topic
    */
   getLikeMutation() {
-    return injectMutation(() => ({
+    return injectSafeMutation<AngularTopicItem, string>(() => ({
       mutationFn: async (id: string) => {
         const res = await firstValueFrom(
           this.http.post<ApiResponse<AngularTopicItem>>(ENDPOINTS.angular.like(id), {})

@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { firstValueFrom } from 'rxjs';
 import { TokenService } from '../../../shared/api/token.service';
 import { ENDPOINTS } from '../../../shared/api/endpoints';
-import { User, LoginResponse } from '../models/auth.types';
+import { User, LoginResponse, AuthApiResponse, LoginResponseSchema, UserSchema } from '../models/auth.types';
 
 @Injectable({
   providedIn: 'root'
@@ -25,10 +25,11 @@ export class AuthService {
       try {
         this.isLoading.set(true);
         const res = await firstValueFrom(
-          this.http.get<any>(ENDPOINTS.auth.me)
+          this.http.get<AuthApiResponse<User> | User>(ENDPOINTS.auth.me)
         );
-        const userProfile = res?.data || res;
-        this.user.set(userProfile);
+        const payload = (res && 'data' in res && res.data) ? res.data : res;
+        const validatedUser = UserSchema.parse(payload);
+        this.user.set(validatedUser);
       } catch {
         this.logout();
       } finally {
@@ -41,9 +42,10 @@ export class AuthService {
     this.isLoading.set(true);
     try {
       const res = await firstValueFrom(
-        this.http.post<any>(ENDPOINTS.auth.login, credentials)
+        this.http.post<AuthApiResponse<LoginResponse> | LoginResponse>(ENDPOINTS.auth.login, credentials)
       );
-      const response: LoginResponse = res?.data || res;
+      const payload = (res && 'data' in res && res.data) ? res.data : res;
+      const response = LoginResponseSchema.parse(payload);
 
       this.tokenService.setTokens(response.accessToken, response.refreshToken);
       this.user.set(response.user);
@@ -57,12 +59,13 @@ export class AuthService {
     this.isLoading.set(true);
     try {
       const res = await firstValueFrom(
-        this.http.post<any>(ENDPOINTS.auth.register, {
+        this.http.post<AuthApiResponse<LoginResponse> | LoginResponse>(ENDPOINTS.auth.register, {
           ...credentials,
           username: credentials.email.split('@')[0] || credentials.name.toLowerCase().replace(/\s+/g, '')
         })
       );
-      const response: LoginResponse = res?.data || res;
+      const payload = (res && 'data' in res && res.data) ? res.data : res;
+      const response = LoginResponseSchema.parse(payload);
 
       this.tokenService.setTokens(response.accessToken, response.refreshToken);
       this.user.set(response.user);

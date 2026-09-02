@@ -1577,7 +1577,7 @@ getSafeHtml(rawHtml: string) {
     difficulty: 'ADVANCED',
     question: 'Your `auth.interceptor.ts` attaches `Authorization: Bearer <token>`, but your backend API logs show `req.headers.authorization` is undefined. What is the cause?',
     options: [
-      'The interceptor forgot to return `next(req.clone({ setHeaders: { Authorization: \`Bearer \${token}\` } }))` or was not registered in `provideHttpClient(withInterceptors([authInterceptor]))`.',
+      "The interceptor forgot to return next(req.clone({ setHeaders: { Authorization: 'Bearer ' + token } })) or was not registered in provideHttpClient(withInterceptors([authInterceptor])).",
       'Backend Express cannot parse Bearer tokens.',
       'JWT tokens cannot be sent over HTTP.',
       'Angular HttpClient strips Authorization headers.'

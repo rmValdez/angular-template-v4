@@ -17,3 +17,11 @@ export const LoginResponseSchema = z.object({
 });
 
 export type LoginResponse = z.infer<typeof LoginResponseSchema>;
+
+export interface AuthApiResponse<T> {
+  status?: string;
+  statusCode?: number;
+  message?: string;
+  data?: T;
+}
+

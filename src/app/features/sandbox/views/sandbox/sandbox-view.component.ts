@@ -1,4 +1,4 @@
-import { Component, signal, computed, effect, inject } from '@angular/core';
+import { Component, signal, computed, inject } from '@angular/core';
 import { CommonModule, CurrencyPipe, DatePipe, DecimalPipe, UpperCasePipe, JsonPipe } from '@angular/common';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CardComponent } from '../../../../shared/ui/card/card.component';
@@ -596,7 +596,7 @@ export class SandboxViewComponent {
     role: new FormControl('USER', [Validators.required])
   });
 
-  readonly formSubmittedData = signal<any>(null);
+  readonly formSubmittedData = signal<Record<string, unknown> | null>(null);
 
   onFormSubmit() {
     if (this.testForm.valid) {

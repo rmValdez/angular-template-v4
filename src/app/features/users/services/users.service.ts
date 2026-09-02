@@ -1,9 +1,10 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { injectQuery, injectMutation, QueryClient } from '@tanstack/angular-query-experimental';
+import { QueryClient } from '@tanstack/angular-query-experimental';
 import { firstValueFrom } from 'rxjs';
+import { injectSafeQuery, injectSafeMutation } from '../../../shared/query';
 import { ENDPOINTS } from '../../../shared/api/endpoints';
-import { UserItem } from '../models/user.types';
+import { UserItem, UserListSchema, UserItemSchema } from '../models/user.types';
 
 @Injectable({
   providedIn: 'root'
@@ -12,17 +13,25 @@ export class UsersService {
   private readonly http = inject(HttpClient);
   private readonly queryClient = inject(QueryClient);
 
+  /**
+   * Zod-validated query for fetching users
+   */
   getUsersQuery() {
-    return injectQuery(() => ({
+    return injectSafeQuery(() => ({
       queryKey: ['users', 'list'],
-      queryFn: () => firstValueFrom(this.http.get<UserItem[]>(ENDPOINTS.users.list))
+      queryFn: () => firstValueFrom(this.http.get<UserItem[]>(ENDPOINTS.users.list)),
+      schema: UserListSchema
     }));
   }
 
+  /**
+   * Zod-validated mutation for updating a user's role
+   */
   updateRoleMutation() {
-    return injectMutation(() => ({
-      mutationFn: (payload: { userId: string; role: string }) =>
+    return injectSafeMutation<UserItem, { userId: string; role: string }>(() => ({
+      mutationFn: (payload) =>
         firstValueFrom(this.http.patch<UserItem>(ENDPOINTS.users.updateRole(payload.userId), { role: payload.role })),
+      schema: UserItemSchema,
       onSuccess: (updatedUser: UserItem) => {
         this.queryClient.setQueryData<UserItem[]>(['users', 'list'], (old: UserItem[] | undefined) => {
           if (!old) return [updatedUser];

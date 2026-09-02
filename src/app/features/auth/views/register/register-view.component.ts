@@ -119,8 +119,9 @@ export class RegisterViewComponent {
         password: this.password
       });
       this.router.navigate(['/dashboard']);
-    } catch (err: any) {
-      this.errorMessage.set(err?.error?.message || err?.message || 'Registration failed.');
+    } catch (err: unknown) {
+      const e = err as { error?: { message?: string }; message?: string };
+      this.errorMessage.set(e?.error?.message || e?.message || 'Registration failed.');
     } finally {
       this.isSubmitting.set(false);
     }

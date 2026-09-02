@@ -1,9 +1,14 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { injectQuery } from '@tanstack/angular-query-experimental';
 import { firstValueFrom } from 'rxjs';
+import { injectSafeQuery } from '../../../shared/query';
 import { ENDPOINTS } from '../../../shared/api/endpoints';
-import { DashboardStats, ActivityItem } from '../models/dashboard.types';
+import {
+  DashboardStats,
+  DashboardStatsSchema,
+  ActivityItem,
+  ActivityListSchema
+} from '../models/dashboard.types';
 
 @Injectable({
   providedIn: 'root'
@@ -12,16 +17,18 @@ export class DashboardService {
   private readonly http = inject(HttpClient);
 
   getStatsQuery() {
-    return injectQuery(() => ({
+    return injectSafeQuery<DashboardStats>(() => ({
       queryKey: ['dashboard', 'stats'],
-      queryFn: () => firstValueFrom(this.http.get<DashboardStats>(ENDPOINTS.dashboard.stats))
+      queryFn: () => firstValueFrom(this.http.get<DashboardStats>(ENDPOINTS.dashboard.stats)),
+      schema: DashboardStatsSchema
     }));
   }
 
   getActivityQuery() {
-    return injectQuery(() => ({
+    return injectSafeQuery<ActivityItem[]>(() => ({
       queryKey: ['dashboard', 'activity'],
-      queryFn: () => firstValueFrom(this.http.get<ActivityItem[]>(ENDPOINTS.dashboard.activity))
+      queryFn: () => firstValueFrom(this.http.get<ActivityItem[]>(ENDPOINTS.dashboard.activity)),
+      schema: ActivityListSchema
     }));
   }
 }
