@@ -30,6 +30,12 @@ export interface QuizProgressResponse {
 })
 export class QuizService {
   private readonly http = inject(HttpClient);
+  // No backend in this ecosystem actually serves this route — every call
+  // always fails. That's intentional: the sandbox quiz works standalone
+  // with zero backend setup. The consumer (quiz-tab.component.ts's
+  // `allQuestions` computed) falls back to the bundled ANGULAR_100_QUIZ_BANK
+  // dataset whenever this query has no data. Point this at a real endpoint
+  // only if you build one.
   private readonly apiUrl = 'http://localhost:3002/api/v1/quiz';
 
   /**
