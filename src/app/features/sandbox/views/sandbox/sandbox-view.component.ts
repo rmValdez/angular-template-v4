@@ -136,7 +136,7 @@ interface SandboxTodo {
             </div>
           } @else if (quizQuery.isError()) {
             <div class="p-4 bg-destructive/10 border border-destructive/20 rounded-xl text-destructive text-sm font-semibold">
-              Error fetching questions: {{ quizQuery.error()?.message }}
+              Error fetching questions: {{ quizQuery.error().message }}
             </div>
           } @else {
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
