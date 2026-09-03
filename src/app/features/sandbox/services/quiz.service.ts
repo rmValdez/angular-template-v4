@@ -2,6 +2,7 @@ import { Injectable, inject, Signal } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { firstValueFrom } from 'rxjs';
 import { injectSafeQuery } from '../../../shared/query';
+import { ENDPOINTS } from '../../../shared/api/endpoints';
 import { QuizQuestion } from '../data/quiz-questions.data';
 
 export interface QuizApiResponse {
@@ -30,13 +31,6 @@ export interface QuizProgressResponse {
 })
 export class QuizService {
   private readonly http = inject(HttpClient);
-  // No backend in this ecosystem actually serves this route — every call
-  // always fails. That's intentional: the sandbox quiz works standalone
-  // with zero backend setup. The consumer (quiz-tab.component.ts's
-  // `allQuestions` computed) falls back to the bundled ANGULAR_100_QUIZ_BANK
-  // dataset whenever this query has no data. Point this at a real endpoint
-  // only if you build one.
-  private readonly apiUrl = 'http://localhost:3002/api/v1/quiz';
 
   /**
    * Fetch quiz questions dynamically from PostgreSQL backend with SafeQuery
@@ -66,7 +60,7 @@ export class QuizService {
           }
 
           const res = await firstValueFrom(
-            this.http.get<QuizApiResponse>(this.apiUrl, { params })
+            this.http.get<QuizApiResponse>(ENDPOINTS.quiz.list, { params })
           );
           return res.data;
         },
@@ -83,7 +77,7 @@ export class QuizService {
       queryKey: ['quiz-progress'],
       queryFn: async () => {
         const res = await firstValueFrom(
-          this.http.get<QuizProgressResponse>(`${this.apiUrl}/progress`)
+          this.http.get<QuizProgressResponse>(ENDPOINTS.quiz.progress)
         );
         return res.data;
       },
@@ -100,7 +94,7 @@ export class QuizService {
     answeredCount: number;
   }) {
     return firstValueFrom(
-      this.http.post<QuizProgressResponse>(`${this.apiUrl}/progress`, payload)
+      this.http.post<QuizProgressResponse>(ENDPOINTS.quiz.progress, payload)
     );
   }
 
@@ -109,7 +103,7 @@ export class QuizService {
    */
   async resetProgressInDb() {
     return firstValueFrom(
-      this.http.post<QuizProgressResponse>(`${this.apiUrl}/progress/reset`, {})
+      this.http.post<QuizProgressResponse>(ENDPOINTS.quiz.reset, {})
     );
   }
 }
