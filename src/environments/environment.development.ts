@@ -2,7 +2,6 @@
 // `ng build --configuration development` (see angular.json fileReplacements).
 export const environment = {
   production: false,
-  // nuxt-template-v2, the shared local auth backend for this template and
-  // vue-template-v3.
-  apiBaseUrl: 'http://localhost:3000/api',
+  // node-postg-backend-template on port 3002
+  apiBaseUrl: 'http://localhost:3002/api/v1',
 };
