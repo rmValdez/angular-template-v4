@@ -27,10 +27,9 @@ export const ENDPOINTS = {
     stats: `${API_BASE_URL}/dashboard/stats`,
     activity: `${API_BASE_URL}/dashboard/activity`
   },
-  angular: {
-    list: `${API_BASE_URL}/angular`,
-    detail: (slug: string) => `${API_BASE_URL}/angular/${slug}`,
-    like: (id: string) => `${API_BASE_URL}/angular/${id}/like`,
-    create: `${API_BASE_URL}/angular`
+  quiz: {
+    list: `${API_BASE_URL}/quiz`,
+    progress: `${API_BASE_URL}/quiz/progress`,
+    reset: `${API_BASE_URL}/quiz/progress/reset`
   }
 } as const;

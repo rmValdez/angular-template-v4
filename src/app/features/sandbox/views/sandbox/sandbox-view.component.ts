@@ -3,7 +3,7 @@ import { CommonModule, CurrencyPipe, DatePipe, DecimalPipe, UpperCasePipe, JsonP
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CardComponent } from '../../../../shared/ui/card/card.component';
 import { BadgeComponent } from '../../../../shared/ui/badge/badge.component';
-import { AngularTopicService } from '../../services/angular-topic.service';
+import { QuizService } from '../../services/quiz.service';
 import { SignalChildDemoComponent } from '../../components/signal-child-demo.component';
 import { HeavyChartDemoComponent } from '../../components/heavy-chart-demo.component';
 import { LearningGuideTabComponent } from '../../components/learning-guide-tab.component';
@@ -82,7 +82,7 @@ interface SandboxTodo {
       </div>
 
       <!-- =================================================================== -->
-      <!-- TAB 1: PRISMA ANGULAR TOPICS (DATABASE MODEL) -->
+      <!-- TAB 1: POSTGRESQL & SERVER STATE (MULTI-TENANT MODEL) -->
       <!-- =================================================================== -->
       @if (activeTab() === 'topics') {
         <app-card className="p-6 space-y-6">
@@ -90,55 +90,79 @@ interface SandboxTodo {
             <div>
               <div class="flex items-center gap-2">
                 <span class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-primary/10 text-primary border border-primary/20">
-                  Prisma Model
+                  Prisma Generic Model
                 </span>
-                <h3 class="text-lg font-bold text-foreground">AngularTopic (PostgreSQL Database)</h3>
+                <h3 class="text-lg font-bold text-foreground">QuizQuestion (PostgreSQL Database)</h3>
               </div>
               <p class="text-xs text-muted-foreground mt-1">
-                Connected directly to <code>AngularTopic</code> table in PostgreSQL via TanStack Query &amp; Express.
+                Connected directly to <code>quiz_questions</code> in PostgreSQL via TanStack Query &amp; Express with tenant scoping (<code>angular-v4</code>).
               </p>
             </div>
             <button
-              (click)="topicsQuery.refetch()"
+              (click)="quizQuery.refetch()"
               class="px-4 py-2 text-xs font-bold bg-primary text-primary-foreground rounded-lg hover:opacity-90 transition-all flex items-center gap-2"
             >
-              🔄 Refresh Topics
+              🔄 Refresh Questions
             </button>
           </div>
 
-          @if (topicsQuery.isLoading()) {
-            <div class="p-12 text-center bg-accent/20 rounded-xl border border-dashed animate-pulse">
-              <p class="text-sm font-semibold text-primary">Loading Angular topics from database...</p>
+          <!-- Connection Metadata Grid -->
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <div class="p-4 rounded-xl bg-accent/20 border space-y-1">
+              <span class="text-[10px] font-mono uppercase font-bold text-muted-foreground">PostgreSQL Status</span>
+              <div class="flex items-center gap-2">
+                <span class="h-2.5 w-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                <span class="text-xs font-bold text-foreground">Connected (:5432)</span>
+              </div>
             </div>
-          } @else if (topicsQuery.isError()) {
+            <div class="p-4 rounded-xl bg-accent/20 border space-y-1">
+              <span class="text-[10px] font-mono uppercase font-bold text-muted-foreground">Redis Cache Layer</span>
+              <div class="flex items-center gap-2">
+                <span class="h-2.5 w-2.5 rounded-full bg-blue-500"></span>
+                <span class="text-xs font-bold text-foreground">Active (:6379)</span>
+              </div>
+            </div>
+            <div class="p-4 rounded-xl bg-accent/20 border space-y-1">
+              <span class="text-[10px] font-mono uppercase font-bold text-muted-foreground">Tenant Isolation</span>
+              <div class="flex items-center gap-2">
+                <span class="text-xs font-mono font-bold text-primary">tenant: angular-v4</span>
+              </div>
+            </div>
+          </div>
+
+          @if (quizQuery.isLoading()) {
+            <div class="p-12 text-center bg-accent/20 rounded-xl border border-dashed animate-pulse">
+              <p class="text-sm font-semibold text-primary">Loading Angular questions from PostgreSQL database...</p>
+            </div>
+          } @else if (quizQuery.isError()) {
             <div class="p-4 bg-destructive/10 border border-destructive/20 rounded-xl text-destructive text-sm font-semibold">
-              Error fetching topics: {{ topicsQuery.error().message }}
+              Error fetching questions: {{ quizQuery.error()?.message }}
             </div>
           } @else {
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-              @for (topic of topicsList(); track topic.id) {
+              @for (question of questionsList(); track question.id) {
                 <div class="p-5 rounded-xl bg-card border hover:border-primary/50 transition-all space-y-3 shadow-sm flex flex-col justify-between">
                   <div class="space-y-2">
                     <div class="flex items-center justify-between">
-                      <app-badge variant="outline">{{ topic.category }}</app-badge>
+                      <app-badge variant="outline">{{ question.category }}</app-badge>
                       <span class="text-[10px] font-mono text-muted-foreground uppercase font-bold px-2 py-0.5 rounded bg-accent">
-                        {{ topic.difficulty }}
+                        {{ question.difficulty }}
                       </span>
                     </div>
-                    <h4 class="text-base font-bold text-foreground leading-snug">{{ topic.title }}</h4>
-                    <p class="text-xs text-muted-foreground">{{ topic.description }}</p>
+                    <h4 class="text-sm font-bold text-foreground leading-snug">{{ question.question }}</h4>
+                    <p class="text-xs text-muted-foreground line-clamp-2">{{ question.explanation }}</p>
 
-                    @if (topic.codeSnippet) {
-                      <div class="mt-3 p-3 bg-slate-900 text-emerald-400 rounded-lg text-xs font-mono overflow-x-auto border border-slate-800">
-                        <pre>{{ topic.codeSnippet }}</pre>
+                    @if (question.codeSnippet) {
+                      <div class="mt-2 p-2.5 bg-slate-900 text-emerald-400 rounded-lg text-[11px] font-mono overflow-x-auto border border-slate-800">
+                        <pre>{{ question.codeSnippet }}</pre>
                       </div>
                     }
                   </div>
 
                   <div class="pt-3 border-t flex items-center justify-between text-xs text-muted-foreground font-mono">
-                    <span>Slug: /{{ topic.slug }}</span>
+                    <span>Question #{{ question.id }}</span>
                     <span class="inline-flex items-center gap-1 text-emerald-500 font-semibold">
-                      <span class="h-1.5 w-1.5 rounded-full bg-emerald-500"></span> Verified Topic
+                      <span class="h-1.5 w-1.5 rounded-full bg-emerald-500"></span> Multi-Tenant Verified
                     </span>
                   </div>
                 </div>
@@ -508,10 +532,10 @@ interface SandboxTodo {
   `
 })
 export class SandboxViewComponent {
-  private readonly angularTopicService = inject(AngularTopicService);
+  private readonly quizService = inject(QuizService);
 
   readonly tabs = [
-    { id: 'topics', label: '1. 🅰️ Angular Model (DB)', icon: '📦' },
+    { id: 'topics', label: '1. 🗄️ PostgreSQL Model', icon: '📦' },
     { id: 'signals', label: '2. Signals & Reactivity', icon: '⚡' },
     { id: 'control-flow', label: '3. Control Flow', icon: '🚥' },
     { id: 'forms', label: '4. Reactive Forms', icon: '📝' },
@@ -523,11 +547,20 @@ export class SandboxViewComponent {
   readonly activeTab = signal('topics');
   readonly demoDate = new Date();
 
-  // --- TAB 1: TOPICS (PRISMA DATABASE) ---
-  readonly topicsQuery = this.angularTopicService.getTopicsQuery();
+  // Signals for query filtering
+  readonly categoryFilter = signal('ALL');
+  readonly difficultyFilter = signal('ALL');
+  readonly searchFilter = signal('');
 
-  readonly topicsList = computed(() => {
-    const data = this.topicsQuery.data();
+  // --- TAB 1: POSTGRESQL QUIZ QUESTIONS (DATABASE MODEL) ---
+  readonly quizQuery = this.quizService.getQuizQuestionsQuery(
+    this.categoryFilter,
+    this.difficultyFilter,
+    this.searchFilter
+  );
+
+  readonly questionsList = computed(() => {
+    const data = this.quizQuery.data();
     if (!data) return [];
     if (Array.isArray(data.items)) return data.items;
     return [];
