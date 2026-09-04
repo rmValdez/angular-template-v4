@@ -20,12 +20,15 @@ Open [http://localhost:4200](http://localhost:4200) in your browser.
 
 ---
 
-## 2. Seed Accounts (via Nuxt 3 Backend)
+## 2. Seed Accounts (via Node.js PostgreSQL Backend)
+
+When connected to backend (`http://localhost:3002/api/v1`):
 
 | Role | Email | Password | Permissions |
 | :--- | :--- | :--- | :--- |
-| **Admin** | `admin@example.com` | `password123` | Full access (Users, Posts, Dashboard, Settings) |
-| **Member** | `user@example.com` | `password123` | Content creation & dashboard view |
+| **Admin** | `admin@example.com` | `Password123!` | Full access (Users, Posts, Dashboard, Settings, Quiz) |
+| **Dev** | `dev@example.com` | `Password123!` | Developer access & API diagnostics |
+| **Member** | `user@example.com` | `Password123!` | Content creation & dashboard view |
 
 ---
 
