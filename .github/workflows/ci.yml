@@ -37,5 +37,8 @@ jobs:
       - name: Validate FAOS Architecture
         run: pnpm run validate
 
+      - name: Run Unit Tests
+        run: pnpm run test
+
       - name: Build Production Bundle
         run: pnpm run build

@@ -10,9 +10,16 @@
     "dev": "ng serve",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
-    "test": "ng test",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:e2e": "playwright test",
+    "test:e2e:ui": "playwright test --ui",
+    "storybook": "storybook dev -p 6006",
+    "build-storybook": "storybook build",
     "lint": "eslint . --max-warnings 0",
-    "validate": "node tools/validate-architecture.mjs"
+    "validate": "node tools/validate-architecture.mjs",
+    "format": "prettier --write .",
+    "prepare": "husky"
   },
   "dependencies": {
     "@angular/animations": "^19.1.0",
@@ -28,23 +35,36 @@
     "date-fns": "^4.1.0",
     "lucide-angular": "^0.479.0",
     "rxjs": "~7.8.0",
+    "socket.io-client": "^4.8.3",
     "tailwind-merge": "^3.0.2",
     "tslib": "^2.3.0",
-    "zod": "^3.24.2",
+    "zod": "^4.4.3",
     "zone.js": "~0.15.0"
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "^19.1.0",
     "@angular/cli": "^19.1.0",
     "@angular/compiler-cli": "^19.1.0",
+    "@commitlint/cli": "^19.8.0",
+    "@commitlint/config-conventional": "^19.8.0",
     "@eslint/js": "^9.22.0",
+    "@playwright/test": "^1.52.0",
     "@types/node": "^22.13.10",
     "autoprefixer": "^10.4.21",
     "eslint": "^9.22.0",
+    "husky": "^9.1.7",
+    "lint-staged": "^15.4.3",
     "postcss": "^8.5.3",
     "prettier": "^3.5.3",
+    "storybook": "^8.6.14",
+    "@storybook/angular": "^8.6.14",
+    "@storybook/addon-essentials": "^8.6.14",
+    "@storybook/addon-interactions": "^8.6.14",
+    "@storybook/addon-a11y": "^8.6.14",
     "tailwindcss": "^3.4.17",
     "typescript": "~5.7.3",
-    "typescript-eslint": "^8.26.0"
+    "typescript-eslint": "^8.26.0",
+    "vitest": "^3.0.8",
+    "jsdom": "^26.0.0"
   }
 }
